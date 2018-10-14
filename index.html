@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chess AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+    <link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="img/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="lib/chessboardjs/css/chessboard-0.3.0.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="board" class="board"></div>
+  <div class="info">
+      <br>
+      <div class="text-center">
+        <button class="btn btn-sm btn-info" onclick="reset();">Reset Game</button>
+        <button class="btn btn-sm btn-success" onclick="undo();">Undo Move</button>
+      </div>
+      <br>
+      <div class="card bg-light text-dark">
+        <div class="card-header text-center">
+          Stats
+        </div>
+        <div class="card-body">
+            Search Depth: &nbsp 
+            <select id="search-depth">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          <br>
+          <span>Positions evaluated: <span id="position-count"></span></span>
+          <br>
+          <span>Time: <span id="time"></span></span>
+          <br>
+          <span>Positions/s: <span id="positions-per-s"></span> </span>
+          <br>
+        </div>
+      </div>
+  </div>
+  
+  <script src="lib/jquery/jquery-3.2.1.min.js"></script>
+  <script src="lib/chessjs/chess.js"></script>
+  <script src="lib/chessboardjs/js/chessboard-0.3.0.min.js"></script>
+
+  <script type="text/javascript" src="js/eval.js"></script>
+  <script type="text/javascript" src="js/events.js"></script>
+  <script type="text/javascript" src="js/conf.js"></script>
+  <script type="text/javascript" src="js/agent.js"></script>
+
+  <script type="text/javascript">
+    //This is the "Offline copy of pages" service worker
+    //Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+    if (navigator.serviceWorker.controller) {
+      console.log('[PWA Builder] active service worker found, no need to register')
+    } else {
+      //Register the ServiceWorker
+      navigator.serviceWorker.register('sw.js', {
+        scope: './'
+      }).then(function(reg) {
+        console.log('Service worker has been registered for scope:'+ reg.scope);
+      });
+    }
+  </script>
+</body>
+</html>
