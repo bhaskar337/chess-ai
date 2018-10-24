@@ -1,35 +1,42 @@
-var minimaxRoot = function(depth, game, isMaximisingPlayer) {
+var hashMap = {};
+var hash = computeHash();
 
+var minimaxRoot = function(depth, game, isMaximisingPlayer) {
     var newGameMoves = game.ugly_moves();
+    var bestHashMove;
     var bestMove = -9999;
     var bestMoveFound;
 
     for(var i = 0; i < newGameMoves.length; i++) {
         var newGameMove = newGameMoves[i]
-        game.ugly_move(newGameMove);
-        var value = minimax(depth - 1, game, -10000, 10000, !isMaximisingPlayer);
+        var move = game.ugly_move(newGameMove);
+        var newHash = updateHash(hash, move);
+        var value = minimax(depth - 1, game, -10000, 10000, !isMaximisingPlayer, newHash);
         game.undo();
         if(value >= bestMove) {
             bestMove = value;
             bestMoveFound = newGameMove;
+            bestHashMove = move;
         }
     }
+    hash = updateHash(hash, bestHashMove);
     return bestMoveFound;
 };
 
-var minimax = function (depth, game, alpha, beta, isMaximisingPlayer) {
+var minimax = function (depth, game, alpha, beta, isMaximisingPlayer, hash) {
     positionCount++;
     if (depth === 0) {
         return -evaluateBoard(game.board());
     }
-
     var newGameMoves = game.ugly_moves();
 
     if (isMaximisingPlayer) {
         var bestMove = -9999;
         for (var i = 0; i < newGameMoves.length; i++) {
-            game.ugly_move(newGameMoves[i]);
-            bestMove = Math.max(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+            var move = game.ugly_move(newGameMoves[i]);
+            var newHash = updateHash(hash, move);
+            bestMove = Math.max(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer, newHash));
+            hashMap[newHash] = {'bestVal': bestMove, 'alpha': alpha, 'beta': beta, 'depth': depth}; 
             game.undo();
             alpha = Math.max(alpha, bestMove);
             if (beta <= alpha) {
@@ -37,11 +44,14 @@ var minimax = function (depth, game, alpha, beta, isMaximisingPlayer) {
             }
         }
         return bestMove;
-    } else {
+    } 
+    else {
         var bestMove = 9999;
         for (var i = 0; i < newGameMoves.length; i++) {
-            game.ugly_move(newGameMoves[i]);
-            bestMove = Math.min(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer));
+            var move = game.ugly_move(newGameMoves[i]);
+            var newHash = updateHash(hash, move);
+            bestMove = Math.min(bestMove, minimax(depth - 1, game, alpha, beta, !isMaximisingPlayer, newHash));
+            hashMap[newHash] = {'bestVal': bestMove, 'alpha': alpha, 'beta': beta, 'depth': depth}; 
             game.undo();
             beta = Math.min(beta, bestMove);
             if (beta <= alpha) {
@@ -78,3 +88,4 @@ var getBestMove = function (game) {
     $('#positions-per-s').text(positionsPerS);
     return bestMove;
 };
+
